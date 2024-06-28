@@ -1,0 +1,6 @@
+#inputText{
+    border: 2px solid black;
+}
+.addTodobtn{
+    display: flex;
+}
