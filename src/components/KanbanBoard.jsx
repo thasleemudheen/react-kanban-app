@@ -90,7 +90,7 @@ export default function KanbanBoard() {
             <Droppable droppableId={status} key={status}>
            {(provided)=>(
             <div className=' className="bg-white rounded-lg shadow-md overflow-hidden"' {...provided.droppableProps} ref={provided.innerRef} key={status}>
-                <h2 className="text-xl font-semibold p-4 bg-gray-200 text-gray-800">{status}</h2>
+                <h2 className="text-xl font-semibold text-center p-4 bg-gray-200 text-gray-800">{status}</h2>
                 <div className="p-4 min-h-[200px]">
                     {tasks.filter((task)=>task.status===status).map((item,index)=>(
                         <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
