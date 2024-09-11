@@ -14,8 +14,9 @@ export default function KanbanBoard() {
     const tasks=useSelector((state)=>state.tasks)
     
     const dispatch=useDispatch()
+    
     let divRef=useRef()
-    const handlChage=(e)=>{
+    const handleChange=(e)=>{
           setInput(e.target.value)
     }
     const saveTask=()=>{
@@ -28,7 +29,7 @@ export default function KanbanBoard() {
     }
    
    const handleDrag=(result)=>{
-    const {destination,source,draggableId}=result
+    const {destination,draggableId}=result
     if(!destination){
       return ;
     }
@@ -55,45 +56,72 @@ export default function KanbanBoard() {
        setEditText('')
    }
   return (
-    <div className='mainTask h-screen	'>
-       <div className='flex justify-center '>
-       <h1 className='text-7xl font-black text-gray-900 dark:text-white	'>Kanban</h1>
-       </div>
-       <div className='addTodobtn '>
-       <button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={showInput}>Add Todo</button>
-       <div ref={divRef} style={{ display: 'none' }}>
-  <input    id="inputText"type="text"value={input} onChange={handlChage}className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-  <button    onClick={saveTask}className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    Save
-  </button>
-</div>
-       </div>
+    <div className='bg-gray-100 min-h-screen p-8'>
+       <div className='max-w-7xl mx-auto '>
+       <h1 className="text-5xl font-bold text-center text-gray-800 mb-10">Kanban Board</h1>
+
+       <div className="mb-8 text-center">
+                    <button
+                        type="button"
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        onClick={showInput}
+                    >
+                        Add Todo
+                    </button>
+                    <div ref={divRef} className="mt-4 hidden">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={handleChange}
+                            className="border-2 border-gray-300 rounded-lg px-4 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Enter a new task"
+                        />
+                        <button
+                            onClick={saveTask}
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
          <DragDropContext onDragEnd={handleDrag}>
-       <div className='flex '>
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {status.map((status)=>(
             <Droppable droppableId={status} key={status}>
            {(provided)=>(
-            <div className='statusDiv border-4  w-1/3 h-screen' {...provided.droppableProps} ref={provided.innerRef} key={status}>
-                <h2 className='h-12 text-center text-3xl font-semibold border-4'>{status}</h2>
-                <div className='bg-sky-100'>
+            <div className=' className="bg-white rounded-lg shadow-md overflow-hidden"' {...provided.droppableProps} ref={provided.innerRef} key={status}>
+                <h2 className="text-xl font-semibold p-4 bg-gray-200 text-gray-800">{status}</h2>
+                <div className="p-4 min-h-[200px]">
                     {tasks.filter((task)=>task.status===status).map((item,index)=>(
                         <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                         {(provided)=>(
-                            <div className='statusItem flex justify-center bg-sky-100	 '>
-                            <div className=' w-1/2 border-4 border-blue-300 h-24 item-center flex justify-center items-center bg-sky-200'>
+                            <div className="bg-gray-50 rounded-lg p-4 mb-4 shadow-sm hover:shadow-md transition duration-300 ease-in-out"
+                            {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                            <div className="bg-gray-50 rounded-lg p-4 mb-4 shadow-sm hover:shadow-md transition duration-300 ease-in-out"
+                            >
                                 {editId===item.id ?(
-                                    <>
-                                    <input type="text" value={editText} onChange={handleEditChange} />
-                                    <button className='border-2	 border-black' onClick={()=>saveEdit(item.id)}>saveEdit</button>
-                                    </>
-                                ):(
-                                    <>
-                                    <h2 className='text-xl'  {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>{item.text}</h2>
-                                    <div>
-                                    <button className='' onClick={()=>deleteTodo(item.id)}><FaTrashCan/></button>
-                                    <button className='' onClick={()=>editTodo(item.id)}><FaEdit/></button>
+                                    <div className="flex items-center">
+                                    <input type="text" value={editText} onChange={handleEditChange}  className="flex-grow border-2 border-gray-300 rounded-lg px-3 py-1 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                    <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded-lg transition duration-300 ease-in-out" onClick={()=>saveEdit(item.id)}>saveEdit</button>
                                     </div>
-                                    </>
+                                ):(
+                                    <div className="flex items-center justify-between">
+                                                                        <span className="text-gray-800">{item.text}</span>
+                                                                        <div className="flex space-x-2">
+                                                                            <button
+                                                                                onClick={() => editTodo(item.id)}
+                                                                                className="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out"
+                                                                            >
+                                                                                <FaEdit />
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() => deleteTodo(item.id)}
+                                                                                className="text-red-500 hover:text-red-600 transition duration-300 ease-in-out"
+                                                                            >
+                                                                                <FaTrashCan />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                 )}                
                         </div>
                         </div>
@@ -108,6 +136,7 @@ export default function KanbanBoard() {
         ))}
        </div>
        </DragDropContext>
+       </div>
    </div>
   )
 }

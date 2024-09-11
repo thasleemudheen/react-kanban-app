@@ -1,7 +1,7 @@
 
 import './App.css'
 import KanbanBoard from './components/KanbanBoard'
-import Task from './components/Task'
+// import Task from './components/Task'
 
 function App() {
 
